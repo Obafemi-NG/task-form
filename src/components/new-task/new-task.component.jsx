@@ -18,7 +18,7 @@ const NewTask = (props) => {
         url: "https://task-form-project-default-rtdb.firebaseio.com/tasks.json",
         method: "POST",
         headers: { "content-Type": "application/json" },
-        body: JSON.stringify({ text: taskText }),
+        body: { text: taskText },
       },
       addedData
     );

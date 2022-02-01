@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useCallback } from "react";
+import { Fragment, useEffect, useState } from "react";
 import NewTask from "../src/components/new-task/new-task.component";
 import Tasks from "./components/tasks/tasks.component";
 import useApi from "./custom-hooks/useApi.hooks";
