@@ -1,38 +1,27 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useCallback } from "react";
 import NewTask from "../src/components/new-task/new-task.component";
 import Tasks from "./components/tasks/tasks.component";
+import useApi from "./custom-hooks/useApi.hooks";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchTask = async () => {
-    setError(null);
-    setIsLoading(true);
-    try {
-      const url =
-        "https://task-form-project-default-rtdb.firebaseio.com/tasks.json";
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Request Failed!");
-      }
-      const data = await response.json();
-
-      const loadedTask = [];
-      for (const taskKey in data) {
-        loadedTask.push({ id: taskKey, text: data[taskKey].text });
-      }
-      setTasks(loadedTask);
-    } catch (error) {
-      setError(error.message || "something went wrong!");
-    }
-    setIsLoading(false);
-  };
+  const { isLoading, error, sendRequest: fetchTask } = useApi();
 
   useEffect(() => {
-    fetchTask();
-  }, []);
+    const loadedData = (apiData) => {
+      const loadedTask = [];
+      for (const taskKey in apiData) {
+        loadedTask.push({ id: taskKey, text: apiData[taskKey].text });
+      }
+      setTasks(loadedTask);
+    };
+    fetchTask(
+      {
+        url: "https://task-form-project-default-rtdb.firebaseio.com/tasks.json",
+      },
+      loadedData
+    );
+  }, [fetchTask]);
 
   const addTaskHandler = (task) => {
     setTasks((prevTask) => prevTask.concat(task));
